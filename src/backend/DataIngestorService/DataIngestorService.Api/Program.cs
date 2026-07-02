@@ -18,8 +18,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var a = new SensorDataArrivedEvent()
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
