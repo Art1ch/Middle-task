@@ -1,0 +1,9 @@
+services:
+    unstable_service:
+        build:
+            context: ./backend/UnstableService
+            dockerfile: Dockerfile
+        ports:
+            - "5000:8080"
+        container_name: unstable_service
+        restart: unless-stopped 
