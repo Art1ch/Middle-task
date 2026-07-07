@@ -2,7 +2,7 @@
 
 namespace Shared.Abstractions.Models;
 
-public sealed class SensorDataItemModel
+public sealed class SensorsDataItemModel
 {
     public string DataType { get; set; }
     public string PlacementName { get; set; }

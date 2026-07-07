@@ -2,4 +2,4 @@
 
 namespace DataIngestorService.Application.Queries.GetSensorData;
 
-public sealed record GetSensorDataQuery() : IRequest<GetSensorDataQueryResult>;
+public sealed record GetSensorsDataQuery() : IRequest<GetSensorsDataQueryResult>;

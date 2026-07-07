@@ -4,5 +4,5 @@ namespace DataIngestorService.Application.Abstractions;
 
 public interface ISensorDataFetcher
 {
-    Task<IEnumerable<SensorDataItemModel>> FetchData(CancellationToken cancellationToken = default);
+    Task<IEnumerable<SensorsDataItemModel>> FetchData(CancellationToken cancellationToken = default);
 }

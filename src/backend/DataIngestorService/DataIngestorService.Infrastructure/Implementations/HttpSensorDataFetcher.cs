@@ -1,7 +1,7 @@
 ﻿using DataIngestorService.Application.Abstractions;
 using DataIngestorService.Infrastructure.Models;
 using Shared.Abstractions.Models;
-using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace DataIngestorService.Infrastructure.Implementations;
 
@@ -14,15 +14,31 @@ internal sealed class HttpSensorDataFetcher : ISensorDataFetcher
         _httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<SensorDataItemModel>> FetchData(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<SensorsDataItemModel>> FetchData(CancellationToken cancellationToken = default)
     {
-        var json = await _httpClient.GetAsync("meters", cancellationToken);
-        // Add validation of error code
+        var response = await _httpClient.GetAsync("meters", cancellationToken);
+        response.EnsureSuccessStatusCode();
 
-        var response = json.Content.ReadFromJsonAsync<List<SensorDataItemJsonModel>>(cancellationToken);
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
+        try
+        {
+            var items = JsonSerializer.Deserialize<List<SensorDataItemJsonModel>>(content);
 
-        // Add parsing of list of json models into the list of normal models
+            var result = items.Select(x =>
+                new SensorsDataItemModel {
+                    DataType = x.Type,
+                    PlacementName = x.Name,
+                    Payload = x.Payload,
+                    Timestamp = DateTime.UtcNow
+                }
+            );
 
-        throw new NotImplementedException();
+            return result;
+        }
+        catch (JsonException)
+        {
+            throw new InvalidOperationException("External API error");
+        }
     }
+
 }

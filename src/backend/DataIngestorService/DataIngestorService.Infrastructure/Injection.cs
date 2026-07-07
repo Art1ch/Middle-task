@@ -22,7 +22,7 @@ public static class Injection
             client.BaseAddress = new Uri(httpSensorDataFetcherSettings.BaseUrl);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("X-Api-Key", httpSensorDataFetcherSettings.ApiSecretKey);
-        });
+        }).AddStandardResilienceHandler();
 
         return services;
     }
