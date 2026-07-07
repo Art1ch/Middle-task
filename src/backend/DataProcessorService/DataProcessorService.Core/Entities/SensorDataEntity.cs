@@ -1,5 +1,4 @@
-﻿using DataProcessorService.Core.Entities.Abstract;
-using Shared.Abstractions.Repository.Abstract;
+﻿using Shared.Abstractions.Repository.Abstract;
 using System.Text.Json;
 
 namespace DataProcessorService.Core.Entities;
