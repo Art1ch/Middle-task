@@ -6,8 +6,12 @@ namespace DataIngestorService.Application;
 
 public static class Injection
 {
-    public static IServiceCollection InjectApplication(this IServiceCollection services) =>
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Injection).Assembly));
+    public static IServiceCollection InjectApplication(this IServiceCollection services)
+    {
+        return services
+            .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Injection).Assembly))
+            .AddKafkaWithMassTransit();
+    }
 
     private static IServiceCollection AddKafkaWithMassTransit(this IServiceCollection services)
     {
