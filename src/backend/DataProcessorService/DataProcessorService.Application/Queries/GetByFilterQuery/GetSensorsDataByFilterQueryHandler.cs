@@ -3,13 +3,13 @@ using DataProcessorService.Application.Filters;
 using MediatR;
 using Shared.Abstractions.Models;
 
-namespace DataProcessorService.Application.Queries.GetByFilterQuery;
+namespace DataProcessorService.Application.Queries.GetSensorsDataByFilterQuery;
 
-internal sealed class GetByFilterQueryHandler(
+internal sealed class GetSensorsDataByFilterQueryHandler(
     ISensorDataRepository sensorDataRepository
-) : IRequestHandler<GetByFilterQuery, GetByFilterQueryResult>
+) : IRequestHandler<GetSensorsDataByFilterQuery, GetSensorsDataByFilterQueryResult>
 {
-    public async Task<GetByFilterQueryResult> Handle(GetByFilterQuery request, CancellationToken cancellationToken)
+    public async Task<GetSensorsDataByFilterQueryResult> Handle(GetSensorsDataByFilterQuery request, CancellationToken cancellationToken)
     {
         var filter = new SensorDataFilter(
             request.Type,
@@ -30,6 +30,6 @@ internal sealed class GetByFilterQueryHandler(
             Timestamp = x.Timestamp
         });
 
-        return new GetByFilterQueryResult(items);
+        return new GetSensorsDataByFilterQueryResult(items);
     }
 }
