@@ -1,17 +1,26 @@
-using Shared.Abstractions.Events;
+using DataIngestorService.Api.BackgroundWorkers;
+using DataIngestorService.Api.Extensions;
+using DataIngestorService.Application;
+using DataIngestorService.Infrastructure;
+using Shared.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var sensorDataFetcherSettings = builder.ConfigureHttpDataSensorFetcherSettings();
+var kafkaSettings = builder.ConfigureKafkaSettings();
+
+builder.Services.AddApplicationLayer(kafkaSettings);
+builder.Services.AddInfrastructureLayer(sensorDataFetcherSettings);
+builder.Services.AddSharedImplementations();
+
+builder.Services.AddHostedService<SensorDataPublisherBackgroundWorker>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

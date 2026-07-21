@@ -13,7 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.Implementations\Shared.Implementations.csproj" />
     <ProjectReference Include="..\DataIngestorService.Application\DataIngestorService.Application.csproj" />
+    <ProjectReference Include="..\DataIngestorService.Infrastructure\DataIngestorService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

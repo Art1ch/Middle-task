@@ -14,10 +14,10 @@ internal sealed class GetSensorsDataByFilterQueryHandler(
         var filter = new SensorDataFilter(
             request.Type,
             request.PlacementName,
-            request.From,
-            request.To,
             request.Page,
-            request.PageSize
+            request.PageSize,
+            request.From,
+            request.To
         );
 
         var entities = await sensorDataRepository.GetByFilter(filter, cancellationToken);

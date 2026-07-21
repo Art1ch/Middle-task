@@ -11,9 +11,14 @@ public class SensorDataPublisherBackgroundWorker : BackgroundService
     private readonly TimeZoneInfo _timeZoneInfo = TimeZoneInfo.Utc;
     private readonly CronExpression _cron = CronExpression.Parse("*/20 * * * * *", CronFormat.IncludeSeconds);
 
+    public SensorDataPublisherBackgroundWorker(IServiceScopeFactory serviceScopeFactory)
+    {
+        _serviceScopeFactory = serviceScopeFactory;
+    }
+
     protected async override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if (!stoppingToken.IsCancellationRequested)
+        while (!stoppingToken.IsCancellationRequested)
         {
             var now = DateTimeOffset.UtcNow;
             var next = _cron.GetNextOccurrence(now, _timeZoneInfo);
@@ -32,10 +37,10 @@ public class SensorDataPublisherBackgroundWorker : BackgroundService
     {
         using var scope = _serviceScopeFactory.CreateScope();
 
-        var sender = scope.ServiceProvider.GetService<ISender>();
+        var sender = scope.ServiceProvider.GetRequiredService<ISender>();
 
         var query = new GetSensorsDataQuery();
-        var queryResult = await sender!.Send(query);
+        var queryResult = await sender!.Send(query, stoppingToken);
 
         var command = new PublishSensorsDataCommand(queryResult.SensorsData);
         await sender!.Send(command);

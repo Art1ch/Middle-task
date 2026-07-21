@@ -1,11 +1,11 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using Shared.Abstractions.Events;
-using Shared.Abstractions.Messaging;
 
 namespace DataIngestorService.Application.Commands.PublishSensorData;
 
 internal sealed class PublishSensorsDataCommandHandler(
-    IEventPublisher<SensorDataArrivedEvent> eventPublisher
+    IPublishEndpoint publishEndpoint
 ) : IRequestHandler<PublishSensorsDataCommand, PublishSensorsDataCommandResult>
 {
     public async Task<PublishSensorsDataCommandResult> Handle(PublishSensorsDataCommand request, CancellationToken cancellationToken)
@@ -19,7 +19,7 @@ internal sealed class PublishSensorsDataCommandHandler(
             )
         );
 
-        await eventPublisher.PublishBatchAsync(events, cancellationToken);
+        await publishEndpoint.PublishBatch(events, cancellationToken);
 
         return new PublishSensorsDataCommandResult();
     }

@@ -3,8 +3,8 @@
 public sealed record SensorDataFilter(  
     string Type,
     string PlacementName,
+    int Page,
+    int PageSize,
     DateTime? From,
-    DateTime? To,
-    int? Page,
-    int? PageSize
+    DateTime? To
 );

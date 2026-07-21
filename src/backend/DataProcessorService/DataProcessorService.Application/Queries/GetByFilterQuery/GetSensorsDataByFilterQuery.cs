@@ -7,6 +7,6 @@ public sealed record GetSensorsDataByFilterQuery(
     string PlacementName,
     DateTime? From,
     DateTime? To,
-    int? Page,
-    int? PageSize
+    int Page,
+    int PageSize
 ) : IRequest<GetSensorsDataByFilterQueryResult>;
