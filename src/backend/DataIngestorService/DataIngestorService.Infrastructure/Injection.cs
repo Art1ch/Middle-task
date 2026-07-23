@@ -7,7 +7,7 @@ namespace DataIngestorService.Infrastructure;
 
 public static class Injection
 {
-    public static IServiceCollection InjectInfrastructure(
+    public static IServiceCollection AddInfrastructureLayer(
         this IServiceCollection services,
         HttpSensorDataFetcherSettings httpSensorDataFetcherSettings    
     ) => services.AddHttpSensorDataFetcher(httpSensorDataFetcherSettings);

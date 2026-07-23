@@ -1,10 +1,12 @@
-﻿using MassTransit;
+﻿using DataProcessorService.Application.Consumers;
+using MassTransit;
+using MassTransit.KafkaIntegration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Abstractions.Events;
 using Shared.Settings.Kafka;
 using System.Reflection;
 
-namespace DataIngestorService.Application;
+namespace DataProcessorService.Application;
 
 public static class Injection
 {
@@ -31,11 +33,19 @@ public static class Injection
 
             x.AddRider(rider =>
             {
-                rider.AddProducer<SensorDataArrivedEvent>(kafkaSettings.Topics.SensorsDataTopic);
+                rider.AddConsumer<SensorDataArrivedEventConsumer>();
 
                 rider.UsingKafka((context, k) =>
                 {
-                    k.Host(kafkaSettings.Host);
+                    k.Host("localhost:9092");
+
+                    k.TopicEndpoint<SensorDataArrivedEvent>(
+                        kafkaSettings.Topics.SensorsDataTopic,
+                        kafkaSettings.Groups.DataProcessorServiceGroup,
+                        e =>
+                    {
+                        e.ConfigureConsumer<SensorDataArrivedEventConsumer>(context);
+                    });
                 });
             });
         });

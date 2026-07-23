@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.Abstractions\Shared.Abstractions.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Settings\Shared.Settings.csproj" />
+    <ProjectReference Include="..\DataProcessorService.Core\DataProcessorService.Core.csproj" />
   </ItemGroup>
 
 </Project>

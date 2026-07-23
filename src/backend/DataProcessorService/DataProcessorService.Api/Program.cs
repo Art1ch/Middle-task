@@ -1,7 +1,7 @@
-using DataIngestorService.Api.BackgroundWorkers;
-using DataIngestorService.Api.Extensions;
-using DataIngestorService.Application;
-using DataIngestorService.Infrastructure;
+using DataProcessorService.Api.Extensions;
+using DataProcessorService.Api.GraphQL.Queries;
+using DataProcessorService.Application;
+using DataProcessorService.Infrastructure;
 using Shared.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,14 +10,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var sensorDataFetcherSettings = builder.ConfigureHttpDataSensorFetcherSettings();
 var kafkaSettings = builder.ConfigureKafkaSettings();
+var sensorsDatabaseSettings = builder.ConfigureSensorsDatabaseSettings();
 
 builder.Services.AddApplicationLayer(kafkaSettings);
-builder.Services.AddInfrastructureLayer(sensorDataFetcherSettings);
+builder.Services.AddInfrastructureLayer(sensorsDatabaseSettings);
 builder.Services.AddSharedImplementations();
 
-builder.Services.AddHostedService<SensorDataPublisherBackgroundWorker>();
+builder.Services.AddGraphQLServer()
+    .AddQueryType<SensorsDataQueries>();
 
 var app = builder.Build();
 
@@ -28,9 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
+app.MapGraphQL();
 app.Run();
