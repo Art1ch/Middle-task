@@ -1,9 +1,11 @@
-﻿using DataProcessorService.Application.Consumers;
+﻿using Confluent.Kafka;
+using DataProcessorService.Application.Consumers;
 using MassTransit;
 using MassTransit.KafkaIntegration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Abstractions.Events;
 using Shared.Settings.Kafka;
+using System.Net;
 using System.Reflection;
 
 namespace DataProcessorService.Application;
@@ -33,17 +35,26 @@ public static class Injection
 
             x.AddRider(rider =>
             {
-                rider.AddConsumer<SensorDataArrivedEventConsumer>();
+                rider.AddConsumer<SensorDataArrivedEventConsumer>(cfg =>
+                {
+                    cfg.Options<BatchOptions>(options => options
+                        .SetMessageLimit(100)
+                        .SetTimeLimit(s: 1)
+                        .SetTimeLimitStart(BatchTimeLimitStart.FromLast)
+                        .GroupBy<SensorDataArrivedEvent, Guid>(x => x.MessageId)
+                        .SetConcurrencyLimit(10));
+                });
 
                 rider.UsingKafka((context, k) =>
                 {
-                    k.Host("localhost:9092");
+                    k.Host(kafkaSettings.Host);
 
                     k.TopicEndpoint<SensorDataArrivedEvent>(
                         kafkaSettings.Topics.SensorsDataTopic,
                         kafkaSettings.Groups.DataProcessorServiceGroup,
                         e =>
                     {
+                        e.CreateIfMissing();
                         e.ConfigureConsumer<SensorDataArrivedEventConsumer>(context);
                     });
                 });

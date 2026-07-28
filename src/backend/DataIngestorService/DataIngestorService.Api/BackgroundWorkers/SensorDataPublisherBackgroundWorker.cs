@@ -8,12 +8,17 @@ namespace DataIngestorService.Api.BackgroundWorkers;
 public class SensorDataPublisherBackgroundWorker : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly ILogger<SensorDataPublisherBackgroundWorker> _logger;
     private readonly TimeZoneInfo _timeZoneInfo = TimeZoneInfo.Utc;
     private readonly CronExpression _cron = CronExpression.Parse("*/20 * * * * *", CronFormat.IncludeSeconds);
 
-    public SensorDataPublisherBackgroundWorker(IServiceScopeFactory serviceScopeFactory)
+    public SensorDataPublisherBackgroundWorker(
+        IServiceScopeFactory serviceScopeFactory,
+        ILogger<SensorDataPublisherBackgroundWorker> logger
+    )
     {
         _serviceScopeFactory = serviceScopeFactory;
+        _logger = logger;
     }
 
     protected async override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -29,7 +34,15 @@ public class SensorDataPublisherBackgroundWorker : BackgroundService
                 await Task.Delay(delay, stoppingToken);
             }
 
-            await FetchAndPublishSensorData(stoppingToken);
+            try
+            {
+                await FetchAndPublishSensorData(stoppingToken);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
         }
     }
 

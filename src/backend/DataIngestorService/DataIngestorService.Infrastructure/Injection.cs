@@ -2,6 +2,7 @@
 using DataIngestorService.Infrastructure.Implementations;
 using DataIngestorService.Infrastructure.Settings;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 
 namespace DataIngestorService.Infrastructure;
 
@@ -22,7 +23,12 @@ public static class Injection
             client.BaseAddress = new Uri(httpSensorDataFetcherSettings.BaseUrl);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("X-Api-Key", httpSensorDataFetcherSettings.ApiSecretKey);
-        }).AddStandardResilienceHandler();
+        }).AddStandardResilienceHandler(options =>
+        {
+            options.Retry.MaxRetryAttempts = httpSensorDataFetcherSettings.MaxRetries;
+            options.Retry.BackoffType = DelayBackoffType.Exponential;
+            options.Retry.Delay = TimeSpan.FromSeconds(httpSensorDataFetcherSettings.DelaySeconds);
+        }); ;
 
         return services;
     }
