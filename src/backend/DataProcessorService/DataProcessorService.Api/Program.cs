@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 
 var kafkaSettings = builder.ConfigureKafkaSettings();
 var sensorsDatabaseSettings = builder.ConfigureSensorsDatabaseSettings();
+var corsSettings = builder.ConfigureCorsSettings();
 
 builder.Services.AddApplicationLayer(kafkaSettings);
 builder.Services.AddInfrastructureLayer(sensorsDatabaseSettings);
@@ -19,6 +20,17 @@ builder.Services.AddSharedImplementations();
 
 builder.Services.AddGraphQLServer()
     .AddQueryType<SensorsDataQueries>();
+    
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsSettings.PolicyName, policy =>
+    {
+        policy
+            .WithOrigins(corsSettings.OriginAddress)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -32,4 +44,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.MapGraphQL();
+app.UseCors(corsSettings.PolicyName);
 app.Run();

@@ -1,4 +1,5 @@
 ﻿using DataProcessorService.Infrastructure.Settings;
+using Shared.Settings.Cors;
 using Shared.Settings.Kafka;
 
 namespace DataProcessorService.Api.Extensions;
@@ -10,6 +11,9 @@ internal static class WebApplicationBuilderExtensions
 
     public static KafkaSettings ConfigureKafkaSettings(this WebApplicationBuilder builder) =>
         builder.ConfigureSettings<KafkaSettings>();
+
+    public static CorsSettings ConfigureCorsSettings(this WebApplicationBuilder builder) =>
+        builder.ConfigureSettings<CorsSettings>();
 
     private static TSettings ConfigureSettings<TSettings>(this WebApplicationBuilder builder) where TSettings : class
     {
