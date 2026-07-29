@@ -1,0 +1,31 @@
+.dashboard-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(350px, 1fr));
+
+  gap: 20px;
+
+  padding: 20px;
+
+  width: 100%;
+
+  box-sizing: border-box;
+}
+
+
+@media (max-width: 1400px) {
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(350px, 1fr));
+  }
+
+}
+
+
+@media (max-width: 800px) {
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+}

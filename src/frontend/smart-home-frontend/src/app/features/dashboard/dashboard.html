@@ -1,0 +1,11 @@
+<app-notification></app-notification>
+
+<div class="dashboard-grid">
+
+  <app-room-chart
+    *ngFor="let room of rooms"
+    [room]="room"
+    [data]="data[room]">
+  </app-room-chart>
+
+</div>
