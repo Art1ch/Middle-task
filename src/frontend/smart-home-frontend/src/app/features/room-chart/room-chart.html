@@ -1,0 +1,19 @@
+<div class="room-card">
+
+  <h2>
+    {{room}}
+  </h2>
+
+
+  <div class="chart-wrapper">
+
+    <canvas
+      baseChart
+      [data]="chartData"
+      [options]="chartOptions"
+      [type]="'line'">
+    </canvas>
+
+  </div>
+
+</div>

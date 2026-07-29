@@ -20,10 +20,10 @@ internal sealed class SensorDataRepository : RepositoryBase<SensorDataEntity>, I
     {
         var query = _sensorsDataContext.Sensors.AsNoTracking();
 
-        if (string.IsNullOrEmpty(dataFilter.Type))
+        if (!string.IsNullOrEmpty(dataFilter.Type))
             query = query.Where(x => x.DataType == dataFilter.Type);
 
-        if (string.IsNullOrEmpty(dataFilter.PlacementName))
+        if (!string.IsNullOrEmpty(dataFilter.PlacementName))
             query = query.Where(x => x.PlacementName == dataFilter.PlacementName);
 
         if (dataFilter.From != null)
@@ -34,7 +34,7 @@ internal sealed class SensorDataRepository : RepositoryBase<SensorDataEntity>, I
 
         var entities = await query
             .OrderBy(x => x.Timestamp)
-            .Skip(dataFilter.Page - 1)
+            .Skip((dataFilter.Page - 1) * dataFilter.PageSize)
             .Take(dataFilter.PageSize)
             .ToListAsync();
 
