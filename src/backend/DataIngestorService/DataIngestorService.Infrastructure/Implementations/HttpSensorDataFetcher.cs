@@ -1,5 +1,6 @@
 ﻿using DataIngestorService.Application.Abstractions;
 using DataIngestorService.Infrastructure.Models;
+using MapsterMapper;
 using Shared.Abstractions.Models;
 using System.Text.Json;
 
@@ -7,11 +8,13 @@ namespace DataIngestorService.Infrastructure.Implementations;
 
 internal sealed class HttpSensorDataFetcher : ISensorDataFetcher
 {
+    private readonly IMapper _mapper;
     private readonly HttpClient _httpClient;
 
-    public HttpSensorDataFetcher(HttpClient httpClient)
+    public HttpSensorDataFetcher(HttpClient httpClient, IMapper mapper)
     {
         _httpClient = httpClient;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<SensorsDataItemModel>> FetchData(CancellationToken cancellationToken = default)
@@ -24,14 +27,7 @@ internal sealed class HttpSensorDataFetcher : ISensorDataFetcher
         {
             var items = JsonSerializer.Deserialize<List<SensorDataItemJsonModel>>(content);
 
-            var result = items.Select(x =>
-                new SensorsDataItemModel {
-                    DataType = x.Type,
-                    PlacementName = x.Name,
-                    Payload = x.Payload,
-                    Timestamp = DateTime.UtcNow
-                }
-            );
+            var result = _mapper.Map<List<SensorsDataItemModel>>(items!);
 
             return result;
         }

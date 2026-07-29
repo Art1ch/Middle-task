@@ -14,12 +14,18 @@ public static class Injection
         return services
             .AddContext(dbSettings)
             .AddRepository();
+
     }
 
     private static IServiceCollection AddContext(this IServiceCollection services, SensorsDatabaseSettings dbSettings)
     {
         return services.AddDbContext<SensorsDataContext>(
-            x => x.UseNpgsql(dbSettings.ConnectionString));
+            x =>
+            {
+                x.UseNpgsql(dbSettings.ConnectionString);
+                x.EnableDetailedErrors(false);
+                x.EnableSensitiveDataLogging(false);
+            });
     }
 
     private static IServiceCollection AddRepository(this IServiceCollection services)

@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using Mapster;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Abstractions.Events;
 using Shared.Settings.Kafka;
@@ -27,7 +28,10 @@ public static class Injection
     {
         return services.AddMassTransit(x =>
         {
-            x.UsingInMemory();
+            x.UsingInMemory((context, cfg) =>
+            {
+                cfg.ConfigureEndpoints(context);
+            });
 
             x.AddRider(rider =>
             {

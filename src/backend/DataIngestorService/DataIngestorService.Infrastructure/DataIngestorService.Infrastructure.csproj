@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="Mapster" Version="10.0.11" />
+	<PackageReference Include="Mapster.DependencyInjection" Version="10.0.11" />
 	<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.7" />
 	<PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.10.0" />
     <ProjectReference Include="..\..\Shared\Shared.Abstractions\Shared.Abstractions.csproj" />

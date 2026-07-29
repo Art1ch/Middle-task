@@ -1,5 +1,6 @@
 ﻿using DataProcessorService.Application.Abstractions;
 using DataProcessorService.Core.Entities;
+using MapsterMapper;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Shared.Abstractions.Events;
@@ -8,21 +9,16 @@ namespace DataProcessorService.Application.Consumers;
 
 internal sealed class SensorDataArrivedEventConsumer(
     ISensorDataRepository sensorDataRepository,
+    IMapper mapper,
     ILogger<SensorDataArrivedEventConsumer> logger
-) : IConsumer<Batch<SensorDataArrivedEvent>>
+) : IConsumer<SensorDataArrivedEvent>
 {
-    public async Task Consume(ConsumeContext<Batch<SensorDataArrivedEvent>> context)
+    public async Task Consume(ConsumeContext<SensorDataArrivedEvent> context)
     {
-        var entities = context.Message.Select(x => new SensorDataEntity
-        {
-            DataType = x.Message.DataType,
-            PlacementName = x.Message.PlacementName,
-            Timestamp = x.Message.Timestamp,
-            Payload = x.Message.Payload,
-        });
+        var entity = mapper.Map<SensorDataEntity>(context.Message);
 
-        await sensorDataRepository.CreateRangeAsync(entities);
+        await sensorDataRepository.CreateAsync(entity);
 
-        logger.LogInformation("Sensors data added");
+        logger.LogInformation($"Sensor data added {DateTime.UtcNow}");
     }
 }

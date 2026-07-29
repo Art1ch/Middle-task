@@ -34,22 +34,22 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-      postgres:
+      sensors_database:
         condition: service_healthy
     restart: unless-stopped
 
-  postgres:
-    image: postgres:16
-    container_name: postgres
+  sensors_database:
+    image: postgres:15
+    container_name: sensors_database
     restart: unless-stopped
     ports:
       - "5432:5432"
     env_file:
       - .env/postgres.env
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    # volumes:
+    #   - sensors_data:/var/lib/postgresql/data/sensors_data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d app_db"]
+      test: ["CMD-SHELL", "pg_isready -U admin -d sensors_db"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -91,4 +91,4 @@ services:
 
 volumes:
   kafka_data:
-  postgres_data:
+  sensors_data:

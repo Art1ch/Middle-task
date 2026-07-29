@@ -1,12 +1,14 @@
 ﻿using DataProcessorService.Application.Abstractions;
 using DataProcessorService.Application.Filters;
+using MapsterMapper;
 using MediatR;
 using Shared.Abstractions.Models;
 
 namespace DataProcessorService.Application.Queries.GetSensorsDataByFilterQuery;
 
 internal sealed class GetSensorsDataByFilterQueryHandler(
-    ISensorDataRepository sensorDataRepository
+    ISensorDataRepository sensorDataRepository,
+    IMapper mapper
 ) : IRequestHandler<GetSensorsDataByFilterQuery, GetSensorsDataByFilterQueryResult>
 {
     public async Task<GetSensorsDataByFilterQueryResult> Handle(GetSensorsDataByFilterQuery request, CancellationToken cancellationToken)
@@ -22,13 +24,7 @@ internal sealed class GetSensorsDataByFilterQueryHandler(
 
         var entities = await sensorDataRepository.GetByFilter(filter, cancellationToken);
 
-        var items = entities.Select(x => new SensorsDataItemModel
-        {
-            DataType = x.DataType,
-            PlacementName = x.PlacementName,
-            Payload = x.Payload,
-            Timestamp = x.Timestamp
-        });
+        var items = mapper.Map<List<SensorsDataItemModel>>(entities);
 
         return new GetSensorsDataByFilterQueryResult(items);
     }

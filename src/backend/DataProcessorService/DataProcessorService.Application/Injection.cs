@@ -1,11 +1,9 @@
-﻿using Confluent.Kafka;
-using DataProcessorService.Application.Consumers;
+﻿using DataProcessorService.Application.Consumers;
+using Mapster;
 using MassTransit;
-using MassTransit.KafkaIntegration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Abstractions.Events;
 using Shared.Settings.Kafka;
-using System.Net;
 using System.Reflection;
 
 namespace DataProcessorService.Application;
@@ -15,6 +13,7 @@ public static class Injection
     public static IServiceCollection AddApplicationLayer(this IServiceCollection services, KafkaSettings kafkaSettings)
     {
         return services
+            .AddMapping()
             .AddCommandsAndQueries()
             .AddMessageBroker(kafkaSettings);
     }
@@ -31,19 +30,14 @@ public static class Injection
     {
         return services.AddMassTransit(x =>
         {
-            x.UsingInMemory();
+            x.UsingInMemory((context, cfg) =>
+            {
+                cfg.ConfigureEndpoints(context);
+            });
 
             x.AddRider(rider =>
             {
-                rider.AddConsumer<SensorDataArrivedEventConsumer>(cfg =>
-                {
-                    cfg.Options<BatchOptions>(options => options
-                        .SetMessageLimit(100)
-                        .SetTimeLimit(s: 1)
-                        .SetTimeLimitStart(BatchTimeLimitStart.FromLast)
-                        .GroupBy<SensorDataArrivedEvent, Guid>(x => x.MessageId)
-                        .SetConcurrencyLimit(10));
-                });
+                rider.AddConsumer<SensorDataArrivedEventConsumer>();
 
                 rider.UsingKafka((context, k) =>
                 {
@@ -60,5 +54,12 @@ public static class Injection
                 });
             });
         });
+    }
+
+    private static IServiceCollection AddMapping(this IServiceCollection services)
+    {
+        services.AddMapster();
+
+        return services;
     }
 }

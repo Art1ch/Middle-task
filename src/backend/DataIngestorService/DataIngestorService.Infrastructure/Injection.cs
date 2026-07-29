@@ -1,6 +1,8 @@
 ﻿using DataIngestorService.Application.Abstractions;
 using DataIngestorService.Infrastructure.Implementations;
+using DataIngestorService.Infrastructure.Mapping;
 using DataIngestorService.Infrastructure.Settings;
+using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 
@@ -10,8 +12,23 @@ public static class Injection
 {
     public static IServiceCollection AddInfrastructureLayer(
         this IServiceCollection services,
-        HttpSensorDataFetcherSettings httpSensorDataFetcherSettings    
-    ) => services.AddHttpSensorDataFetcher(httpSensorDataFetcherSettings);
+        HttpSensorDataFetcherSettings httpSensorDataFetcherSettings
+    )
+    {
+        return services
+            .AddMapping()
+            .AddHttpSensorDataFetcher(httpSensorDataFetcherSettings);
+    }
+
+    private static IServiceCollection AddMapping(this IServiceCollection services)
+    {
+        TypeAdapterConfig.GlobalSettings.Scan(
+            typeof(MappingProfile).Assembly
+        );
+        services.AddMapster();
+
+        return services;
+    }
 
     private static IServiceCollection AddHttpSensorDataFetcher(
         this IServiceCollection services,

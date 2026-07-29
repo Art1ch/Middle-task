@@ -1,25 +1,21 @@
-﻿using MassTransit;
+﻿using MapsterMapper;
+using MassTransit;
 using MediatR;
 using Shared.Abstractions.Events;
 
 namespace DataIngestorService.Application.Commands.PublishSensorData;
 
 internal sealed class PublishSensorsDataCommandHandler(
-    IPublishEndpoint publishEndpoint
+    ITopicProducer<SensorDataArrivedEvent> topicProducer,
+    IMapper mapper
 ) : IRequestHandler<PublishSensorsDataCommand, PublishSensorsDataCommandResult>
 {
     public async Task<PublishSensorsDataCommandResult> Handle(PublishSensorsDataCommand request, CancellationToken cancellationToken)
     {
-        var events = request.SensorsData.Select(x => 
-            new SensorDataArrivedEvent(
-                x.DataType,
-                x.PlacementName,
-                x.Timestamp,
-                x.Payload
-            )
-        );
+        var events = mapper.Map<List<SensorDataArrivedEvent>>(request.SensorsData);
 
-        await publishEndpoint.PublishBatch(events, cancellationToken);
+        foreach (var @event in events)
+             await topicProducer.Produce(@event);
 
         return new PublishSensorsDataCommandResult();
     }
