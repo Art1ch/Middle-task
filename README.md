@@ -1,5 +1,5 @@
 # docker compose build
-# docker compose build
+# docker compose up
 
 # cd src/frontend/smart-home-frontend/src 
 # ng serve
