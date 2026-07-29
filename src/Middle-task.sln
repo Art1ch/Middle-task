@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.8.12009.203 stable
+VisualStudioVersion = 18.8.12009.203
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{F4E3FD33-4292-483A-ADA4-67FA35E8FAF5}"
 EndProject
@@ -30,6 +30,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Implementations", "backend\Shared\Shared.Implementations\Shared.Implementations.csproj", "{7D269583-65A6-411B-8203-0E7E1AC8ECAF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Settings", "backend\Shared\Shared.Settings\Shared.Settings.csproj", "{3A101B04-8C97-4A0F-9E53-8CFD23AB558B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationService", "NotificationService", "{43A7173E-3D43-4632-B176-9A651A6E11E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Application", "backend\NotificationService\NotificationService.Application\NotificationService.Application.csproj", "{A491FE28-A32A-406E-98B5-DC86D978F3F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Api", "backend\NotificationService\NotificationService.Api\NotificationService.Api.csproj", "{4F8658A0-68E8-40FD-B58D-F10549247B5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +83,14 @@ Global
 		{3A101B04-8C97-4A0F-9E53-8CFD23AB558B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A101B04-8C97-4A0F-9E53-8CFD23AB558B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A101B04-8C97-4A0F-9E53-8CFD23AB558B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A491FE28-A32A-406E-98B5-DC86D978F3F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A491FE28-A32A-406E-98B5-DC86D978F3F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A491FE28-A32A-406E-98B5-DC86D978F3F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A491FE28-A32A-406E-98B5-DC86D978F3F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F8658A0-68E8-40FD-B58D-F10549247B5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F8658A0-68E8-40FD-B58D-F10549247B5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F8658A0-68E8-40FD-B58D-F10549247B5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F8658A0-68E8-40FD-B58D-F10549247B5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +109,9 @@ Global
 		{9CF052B2-29CA-496A-A864-707528E3AFF3} = {EBBF7899-0285-4B4A-A8B7-9842D0A4EB46}
 		{7D269583-65A6-411B-8203-0E7E1AC8ECAF} = {685F2DD5-2E25-4930-8DC5-CFB4178C1678}
 		{3A101B04-8C97-4A0F-9E53-8CFD23AB558B} = {685F2DD5-2E25-4930-8DC5-CFB4178C1678}
+		{43A7173E-3D43-4632-B176-9A651A6E11E9} = {F4E3FD33-4292-483A-ADA4-67FA35E8FAF5}
+		{A491FE28-A32A-406E-98B5-DC86D978F3F3} = {43A7173E-3D43-4632-B176-9A651A6E11E9}
+		{4F8658A0-68E8-40FD-B58D-F10549247B5D} = {43A7173E-3D43-4632-B176-9A651A6E11E9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B62B3CBF-F0E8-4217-8BCF-D1BB89FEB22D}

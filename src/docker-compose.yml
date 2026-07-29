@@ -38,6 +38,20 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  notification_service:
+    build:
+      context: .
+      dockerfile: ./backend/NotificationService/NotificationService.Api/Dockerfile
+    ports:
+      - "5030:8080"
+    env_file:
+      - .env/notification_service.env
+    container_name: notification_service
+    depends_on:
+      kafka:
+        condition: service_healthy
+    restart: unless-stopped
+
   sensors_database:
     image: postgres:15
     container_name: sensors_database
